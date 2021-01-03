@@ -1,0 +1,45 @@
+@startuml
+title LatestDataを読み出す際のシーケンス
+
+participant main order 10
+participant EnvSensor order 20
+participant OmronLatestData order 25
+participant bluepy.btle.Peripheral order 30
+participant bluepy.btle.Service order 40
+participant bluepy.btle.Characteristics order 50
+
+create EnvSensor
+main -> EnvSensor ++: << create >>
+
+create bluepy.btle.Peripheral
+EnvSensor -> bluepy.btle.Peripheral ++: << create >>
+EnvSensor -> bluepy.btle.Peripheral ++: connect
+return
+
+EnvSensor -> EnvSensor ++: read_latest_data
+
+create OmronLatestData
+EnvSensor -> OmronLatestData ++: <<create>>
+return
+
+EnvSensor -> EnvSensor ++: read_char_base
+
+EnvSensor -> bluepy.btle.Peripheral ++: getServiceByUUID
+return
+
+EnvSensor -> bluepy.btle.Service ++: getCharacteristics
+return
+
+EnvSensor -> bluepy.btle.Characteristics ++: read
+return
+
+return
+
+EnvSensor -> OmronLatestData ++: parse
+return
+
+return
+return
+return
+
+@enduml

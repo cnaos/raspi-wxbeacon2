@@ -1,0 +1,12 @@
+[Unit]
+Description=Retrieve EnvSensorData script
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/cnaos/raspi-wxbeacon2/
+ExecStart=/home/cnaos/raspi-wxbeacon2/main.py
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

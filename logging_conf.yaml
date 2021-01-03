@@ -1,0 +1,50 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+  simple_fmt:
+    format: '%(asctime)s  %(name)s  %(levelname)s %(message)s'
+
+  file_log_format:
+    format: '{asctime}  {levelname} {name}  {message:s}'
+    datefmt: '%Y-%m-%dT%H:%M:%S%z'
+    style: '{'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: simple_fmt
+    stream: ext://sys.stdout
+
+  file_wxbeacon2:
+    class: logging.handlers.TimedRotatingFileHandler
+    formatter: file_log_format
+    filename: log/wxbeacon2_scan.log
+    # when: D is MAYBE wrong.
+    when: MIDNIGHT
+    backupCount: 31
+    encoding: utf-8
+
+  file_influxdb:
+    class: logging.handlers.TimedRotatingFileHandler
+    formatter: file_log_format
+    filename: log/post_influxdb.log
+    # when: D is MAYBE wrong.
+    when: MIDNIGHT
+    backupCount: 31
+    encoding: utf-8
+
+loggers:
+  post_influxdb:
+    level: DEBUG
+    handlers: [ console, file_influxdb ]
+    propagate: false
+
+  wxbeacon2_scan:
+    level: DEBUG
+    handlers: [ console, file_wxbeacon2 ]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [ console,file_influxdb, file_wxbeacon2 ]

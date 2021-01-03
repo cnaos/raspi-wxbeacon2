@@ -1,0 +1,14 @@
+target_device_list:
+  - addr: xx:xx:xx:xx:xx:xx
+  - addr: xx:xx:xx:xx:xx:xx
+
+database:
+  filename: "env_sensor.sqlite"
+
+influxdb:
+  host: 'localhost'
+  port: 8086
+  username: 'root'
+  password: 'root'
+  database: "env_sensor"
+

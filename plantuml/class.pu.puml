@@ -1,0 +1,66 @@
+@startuml
+
+package db_model{
+    class EnvSensorDevice{
+        int id
+        String address
+        String label
+        DateTime time_information
+    }
+
+    class EnvSensorLog{
+        int id
+        int device_id
+        DateTime log_date
+        int page
+        JSONField data
+
+    }
+    class EnvSensorCurrentDataLog
+    
+    class InfluxdbPostPosition{
+        int post_log_position
+        DateTime timestamp
+    }
+}
+
+package omron_env_sensor {
+    class OmronEnvSensorBLEChara
+    class OmronLatestData
+    class OmronLatestPage
+    class OmronRequestPage
+    class OmronResponseFlag
+    class OmronResponseData
+    class OmronMeasurementInterval
+    class OmronTimeInformation
+    class OmronErrorStatus
+}
+
+package peewee {
+    class Model
+}
+
+EnvSensorDevice --|> Model
+EnvSensorLog --|> Model
+EnvSensorCurrentDataLog --|> Model
+InfluxdbPostPosition --|> Model
+
+
+package main{
+    class EnvSensor{
+        Peripheral ble_peripheral
+        String addr
+    }
+}
+
+EnvSensor o- bluepy.Peripheral
+
+package bluepy {
+    class Peripheral
+}
+
+
+EnvSensor <--> omron_env_sensor
+EnvSensor <--> db_model
+
+@enduml

@@ -1,0 +1,12 @@
+[Unit]
+Description=Post EnvSensorData to influxdb
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/cnaos/raspi-wxbeacon2/
+ExecStart=/home/cnaos/raspi-wxbeacon2/post_influxdb.py
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
