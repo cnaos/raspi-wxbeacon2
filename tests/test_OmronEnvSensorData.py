@@ -1,4 +1,7 @@
 import datetime
+
+import pytest
+
 from omron.env_sensor_data import OmronLatestData, OmronLatestPage, OmronTimeInformation, \
     OmronErrorStatus, OmronMeasurementInterval
 
@@ -100,6 +103,82 @@ class TestOmronLatestPage:
         assert latest_page.measurement_interval == 300
         assert latest_page.page == 521
         assert latest_page.row == 11
+
+
+class TestOmronLatestPageExportPagePosition:
+    def test_calcpage_latest_page_0_to_0(self):
+        target = OmronLatestPage(0)
+        result = target.calcPage(0)
+        assert len(result) == 1
+        assert str(result) == "[0]"
+        assert result[0] == 0
+
+    def test_calcpage_latest_page_0_to_1(self):
+        target = OmronLatestPage(1)
+        result = target.calcPage(0)
+        assert len(result) == 2
+        assert str(result) == "[0, 1]"
+        assert result[0] == 0
+        assert result[1] == 1
+
+    def test_calcpage_latest_page_0_to_2047(self):
+        target = OmronLatestPage(2047)
+        result = target.calcPage(0)
+        assert len(result) == 2048
+        assert result[0] == 0
+        assert result[2047] == 2047
+
+    def test_calcpage_latest_page_0_to_2048_invalid(self):
+        target = OmronLatestPage(0)
+        with pytest.raises(IndexError):
+            target.calcPage(2048)
+
+    def test_calcpage_latest_page_0_to_minus1_invalid(self):
+        target = OmronLatestPage(0)
+        with pytest.raises(IndexError):
+            target.calcPage(-1)
+
+    def test_calcpage_latest_page_1_to_1(self):
+        target = OmronLatestPage(1)
+        result = target.calcPage(1)
+        assert len(result) == 1
+        assert str(result) == "[1]"
+        assert result[0] == 1
+
+    def test_calcpage_latest_page_1_to_2(self):
+        target = OmronLatestPage(2)
+        result = target.calcPage(1)
+        assert len(result) == 2
+        assert str(result) == "[1, 2]"
+        assert result[0] == 1
+        assert result[1] == 2
+
+    def test_calcpage_latest_page_2046_to_2047(self):
+        target = OmronLatestPage(2047)
+        result = target.calcPage(2046)
+        assert len(result) == 2
+        assert str(result) == "[2046, 2047]"
+        assert result[0] == 2046
+        assert result[1] == 2047
+
+    def test_calcpage_latest_page_2046_to_0(self):
+        target = OmronLatestPage(0)
+        result = target.calcPage(2046)
+        assert len(result) == 3
+        assert str(result) == "[2046, 2047, 0]"
+        assert result[0] == 2046
+        assert result[1] == 2047
+        assert result[2] == 0
+
+    def test_calcpage_latest_page_2046_to_1(self):
+        target = OmronLatestPage(1)
+        result = target.calcPage(2046)
+        assert len(result) == 4
+        assert str(result) == "[2046, 2047, 0, 1]"
+        assert result[0] == 2046
+        assert result[1] == 2047
+        assert result[2] == 0
+        assert result[3] == 1
 
 
 class TestOmronTimeInformation:
