@@ -43,7 +43,7 @@ class OmronEnvSensorBLEChara(metaclass=ABCMeta):
         return self._char_uuid
 
     @property
-    def serviceUuid(self) -> uuid:
+    def serviceUuid(self) -> UUID:
         """
         環境センサーのBLE Characteristicsの親になっているBLE Serviceのフルuuidを返す
         Returns

@@ -25,7 +25,7 @@ from tqdm import tqdm
 
 import db_model
 from command_config import CommandConfig, TargetDevice
-from omron_env_sensor import OmronLatestData, OmronLatestPage, OmronRequestPage, OmronResponseFlag, OmronResponseData, \
+from omron.env_sensor_data import OmronLatestData, OmronLatestPage, OmronRequestPage, OmronResponseFlag, OmronResponseData, \
     OmronTimeInformation, \
     OmronErrorStatus, OmronMeasurementInterval
 from util import DateTimeSupportJSONEncoder, LogData
@@ -141,7 +141,6 @@ class EnvSensor:
                 self.MSG(ERROR, F'try {i + 1}: BTLE Exception while connecting ')
                 self.MSG(ERROR, '  type:' + str(type(e)))
                 self.MSG(ERROR, '  args:' + str(e.args))
-                time.sleep(retry_interval_sec)
             else:
                 self.isConnected = True
                 self.MSG(INFO, 'connected')
@@ -150,6 +149,8 @@ class EnvSensor:
             finally:
                 self.connect_timer.cancel()
                 self.connect_timer.join()  # 完全にキャンセルするまで待つ
+
+            time.sleep(retry_interval_sec)
 
         if not self.isConnected:
             self.MSG(ERROR, "connect failed.")

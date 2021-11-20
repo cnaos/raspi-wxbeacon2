@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 
 # from main import LogData
-from omron_env_sensor import OmronEnvSensorBLEChara, OmronResponseData
+from omron.env_sensor_data import OmronEnvSensorBLEChara, OmronResponseData
 
 
 class DateTimeSupportJSONEncoder(json.JSONEncoder):

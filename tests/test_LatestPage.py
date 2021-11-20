@@ -1,6 +1,6 @@
 import unittest
 
-from omron_env_sensor import OmronLatestPage
+from omron.env_sensor_data import OmronLatestPage
 
 
 class ExportPagePositionTestCase(unittest.TestCase):

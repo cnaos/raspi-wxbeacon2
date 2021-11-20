@@ -8,7 +8,7 @@ from threading import Timer
 
 from bluepy.btle import Peripheral, BTLEException
 
-from omron_env_sensor import OmronRequestPage, OmronResponseFlag, OmronResponseData
+from omron.env_sensor_data import OmronRequestPage, OmronResponseFlag, OmronResponseData
 
 
 def connect_with_timeout(ble_peripheral: Peripheral, addr: str, timeout_sec=30, max_retry=5,
