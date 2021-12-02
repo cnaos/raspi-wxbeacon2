@@ -333,9 +333,9 @@ class OmronTimeInformation(OmronEnvSensorBLEChara):
                     )
 
     @staticmethod
-    def encode_data(unixtime: int) -> bytes:
+    def encode_data(unix_time: int) -> bytes:
         # TODO テスト
-        return struct.pack("<L", unixtime)
+        return struct.pack("<L", unix_time)
 
 
 # noinspection SpellCheckingInspection
