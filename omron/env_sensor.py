@@ -10,8 +10,8 @@ from bluepy.btle import Peripheral
 from retry import retry
 
 from omron.env_sensor_data import OmronLatestData, OmronLatestPage, OmronRequestPage, OmronResponseFlag, \
-    OmronResponseData, OmronTimeInformation, OmronMeasurementInterval, OmronErrorStatus
-from util import LogData, DateTimeSupportJSONEncoder
+    OmronResponseData, OmronTimeInformation, OmronMeasurementInterval, OmronErrorStatus, LogData
+from util import DateTimeSupportJSONEncoder
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())

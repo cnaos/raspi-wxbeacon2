@@ -14,6 +14,7 @@ import yaml
 from peewee import *
 from playhouse.shortcuts import model_to_dict
 from playhouse.sqlite_ext import SqliteExtDatabase
+from retry import retry
 from tqdm import tqdm
 
 import db_model
@@ -56,13 +57,10 @@ def main(config: CommandConfig) -> None:
         exit(1)
 
     logger.debug("----process Devices----")
+    target_device: TargetDevice
     for target_device in config.target_device_list:
         try:
-            device = OmronEnvSensor(target_device.addr)
-            if device.check_omron_env_sensor():
-                process_target_device(device, db, target_device)
-            else:
-                logger.error(f"{target_device.addr} is NOT Omron Env Sensor")
+            process_target_device(db, target_device)
         except Exception as e:
             logger.exception(f"process_target_device: address={target_device.addr}, exception={e}")
             # pass
@@ -73,7 +71,13 @@ def log_device(level: int, address: str, *log_args):
     logger.log(level, F'{address}: {msg}')
 
 
-def process_target_device(device: OmronEnvSensor, db: SqliteDatabase, target_device: TargetDevice):
+@retry(tries=3, delay=1, logger=logger)
+def process_target_device(db: SqliteDatabase, target_device: TargetDevice):
+    device = OmronEnvSensor(target_device.addr)
+    if not device.check_omron_env_sensor():
+        logger.error(f"{target_device.addr} is NOT Omron Env Sensor")
+        return
+
     # 最新の観測データの表示
     latest_data = device.read_latest_data()
     log_device(INFO, device.address, F'latestData = {latest_data}')
