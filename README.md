@@ -159,10 +159,12 @@ pythonのlogging.config用のファイルです。
   * 設定ファイルの構造化用クラス群
 * db_model.py
   * DBのモデル
-* omron_env_sensor.py
-  * Omron環境センサーのBLE Characteristicsと読み書きするデータを扱うためのクラス
+* omron/env_sensor.py
+  * Omron環境センサーのBLE Characteristicsを読み書きするための処理をまとめたクラス
+* omron/env_sensor_data.py
+  * Omron環境センサーのBLE Characteristicsのデータを扱うためのクラス
 * util.py
-  * その他のクラス 
+  * その他のクラス
 
 # 参考にさせていただいた資料
 
