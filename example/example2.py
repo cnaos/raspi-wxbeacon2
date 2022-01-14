@@ -4,7 +4,6 @@
 import argparse
 import struct
 import time
-from threading import Timer
 
 from bluepy.btle import Peripheral, UUID, BTLEException
 
@@ -12,15 +11,13 @@ OMRON_LATEST_DATA_UUID = UUID('%08X-7700-46F4-AA96-D5E974E32A54' % (0x0C4C0000 +
 OMRON_SENSOR_SERVICE_UUID = UUID('%08X-7700-46F4-AA96-D5E974E32A54' % (0x0C4C0000 + (0xFFF0 & 0x3000)))
 
 
-def connect_with_timeout(ble_peripheral: Peripheral, addr: str, timeout_sec=30, max_retry=5,
-                         retry_interval_sec=5) -> None:
+def connect(addr: str, max_retry=5, retry_interval_sec=1) -> Peripheral:
+    ble_peripheral = None
     is_connected = False
     for i in range(max_retry):
         try:
             print(f'connecting to {addr} {i + 1}/{max_retry}')
-            connect_timer = Timer(timeout_sec, timeout_disconnect, args=[ble_peripheral])
-            connect_timer.start()
-            ble_peripheral.connect(addr=addr, addrType="random")
+            ble_peripheral = Peripheral(deviceAddr=addr, addrType="random")
         except BTLEException as e:
             print(f'ERROR: try {i + 1}: BTLE Exception while connecting ')
             print(f'ERROR:   type:' + str(type(e)))
@@ -29,19 +26,11 @@ def connect_with_timeout(ble_peripheral: Peripheral, addr: str, timeout_sec=30, 
         else:
             is_connected = True
             print(f'connected.')
-            break
-        finally:
-            connect_timer.cancel()
-            connect_timer.join()  # 完全にキャンセルするまで待つ
+            return ble_peripheral
 
     if not is_connected:
         print(f"ERROR: connect failed.")
         raise Exception(F"BTLE connect to {addr} failed.")
-
-
-def timeout_disconnect(ble_peripheral: Peripheral) -> None:
-    print(f'ERROR connect timer expired')
-    ble_peripheral.disconnect()
 
 
 def main():
@@ -51,9 +40,7 @@ def main():
     args = parser.parse_args()
 
     # 環境センサーに接続する
-    ble_peripheral = Peripheral()
-
-    connect_with_timeout(ble_peripheral, addr=args.addr)
+    ble_peripheral = connect(addr=args.addr)
 
     # BLE サービスを取得
     service = ble_peripheral.getServiceByUUID(uuidVal=OMRON_SENSOR_SERVICE_UUID)
