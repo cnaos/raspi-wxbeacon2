@@ -7,4 +7,4 @@ OnUnitActiveSec=15min
 Unit=wxbeacon2scan.service
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=timers.target
